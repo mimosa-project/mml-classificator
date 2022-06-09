@@ -5,7 +5,7 @@ import pprint
 import pandas as pd 
 import numpy as np
 np.set_printoptions(threshold=np.inf)
-np.set_printoptions(linewidth=150)
+np.set_printoptions(linewidth=100)
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -17,7 +17,9 @@ from sklearn.linear_model import LogisticRegression
 
 def main():
     df = pd.read_csv('分類表.csv')
-    word = input_data_formatting(df)
+    dir = './learning_data/'
+    words_list = input_data_formatting(df, dir)
+    print(len(words_list))
 
     targets = []
 
@@ -28,9 +30,16 @@ def main():
     tf_idf_vectorizer = TfidfVectorizer(lowercase=False, token_pattern=r"\S+")
 
     # csr_matrix(疎行列)にしてndarray(多次元配列)に変形
-    feature_vectors = tf_idf_vectorizer.fit_transform(word).toarray()
+    feature_vectors = tf_idf_vectorizer.fit_transform(words_list).toarray()
 
     input_train, input_test, output_train, output_test = train_test_split(feature_vectors, targets, test_size=0.2, random_state=0, stratify=targets)
+    
+    # feature_vectors = np.insert(feature_vectors, 0, list(range(len(feature_vectors))), axis=1)
+    # input_train, input_test, output_train, output_test = train_test_split(feature_vectors, targets, test_size=0.2, random_state=0, stratify=targets)
+    # input_train = input_train[:, 1:]
+    # input_test = input_test[:, 1:]
+    # train_indices = input_train[:, 0]
+    # test_indices = input_test[:, 0]
 
     sc = StandardScaler()
     sc.fit(input_train)
@@ -38,7 +47,7 @@ def main():
     input_test_std = sc.transform(input_test)
 
     # 学習インスタンス生成
-    svc_model = SVC(kernel='linear', random_state=None)
+    svc_model = SVC(kernel="linear", random_state=None)
     # svc_model = LogisticRegression(random_state=None)
 
     # 学習
