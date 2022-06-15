@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# learning_data内のファイルを無視する
+learning_data/
+
+# words_list.pklを無視する
+words_list.pkl
