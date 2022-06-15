@@ -31,8 +31,6 @@ def main():
         with open('words_list.pkl', 'wb') as f:
             pickle.dump(words_list, f)
 
-    print(len(words_list))
-
     targets = []
 
     for label in df['label_number']:
@@ -43,8 +41,6 @@ def main():
 
     # csr_matrix(疎行列)にしてndarray(多次元配列)に変形
     feature_vectors = tf_idf_vectorizer.fit_transform(words_list).toarray()
-
-    print(type(feature_vectors))
 
     # train_test_splitでラベル位置が変わらないようにしている
     feature_vectors = np.insert(feature_vectors, 0, list(range(len(feature_vectors))), axis=1)
